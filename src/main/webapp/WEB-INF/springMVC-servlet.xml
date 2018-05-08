@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+    <!--自动加载注解配置-->
+    <context:annotation-config/>
+
+    <!--启动注解驱动的spring mvc功能-->
+    <mvc:annotation-driven/>
+
+    <!--启动包扫描功能，指定扫描哪些包来管理配置bean-->
+    <context:component-scan base-package="com.permission.controller"/>
+    <context:component-scan base-package="com.permission.service"/>
+
+    <!--核心类-->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+
+    <!--json处理-->
+    <bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+
+    <!--jsp 指定前缀后缀-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/views/"/>
+        <property name="suffix" value=".jsp" />
+    </bean>
+</beans>
