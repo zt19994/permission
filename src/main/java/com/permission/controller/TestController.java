@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/test")
 public class TestController {
 
-    private Logger logger = LoggerFactory.getLogger(TestController.class);
+    private static  Logger logger = LoggerFactory.getLogger(TestController.class);
 
     @RequestMapping("/hello")
     @ResponseBody

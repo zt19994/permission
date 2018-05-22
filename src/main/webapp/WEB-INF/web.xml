@@ -3,10 +3,10 @@
 
     <display-name>Archetype Created Web Application</display-name>
 
+
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-
     <!-- Spring beans 配置文件所在目录 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -15,18 +15,11 @@
 
     <!--前端分发器-->
     <servlet>
-        <servlet-name>dispatcherServlet</servlet-name>
+        <servlet-name>spring</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <!--扫描spring配置文件-->
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>classpath:springMVC-servlet.xml</param-value>
-        </init-param>
-        <!--优先级-->
-        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>dispatcherServlet</servlet-name>
+        <servlet-name>spring</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
