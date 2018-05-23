@@ -1,6 +1,8 @@
 package com.permission.controller;
 
 
+import com.permission.common.JsonData;
+import com.permission.exception.PermissionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -17,10 +19,11 @@ public class TestController {
 
     private static  Logger logger = LoggerFactory.getLogger(TestController.class);
 
-    @RequestMapping("/hello")
+    @RequestMapping("/hello.json")
     @ResponseBody
-    public String hello(){
+    public JsonData hello(){
         logger.info("hello");
-        return "hello, permission";
+        throw new RuntimeException("test exception");
+        //return JsonData.success("hello, permission");
     }
 }

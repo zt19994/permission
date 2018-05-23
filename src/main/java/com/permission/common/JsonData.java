@@ -3,6 +3,9 @@ package com.permission.common;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * json数据返回
  * @author zt1994 2018/5/22 21:01
@@ -14,7 +17,7 @@ public class JsonData {
     /**
      * 返回结果
      */
-    private boolean result;
+    private boolean ret;
 
     /**
      * msg 信息
@@ -27,7 +30,7 @@ public class JsonData {
     private Object data;
 
     private JsonData(boolean result){
-        this.result = result;
+        this.ret = result;
     }
 
     /**
@@ -71,5 +74,17 @@ public class JsonData {
         JsonData jsonData = new JsonData(false);
         jsonData.msg = msg;
         return jsonData;
+    }
+
+    /**
+     * toMap
+     * @return
+     */
+    public Map<String,Object> toMap(){
+        HashMap<String,Object> result = new HashMap<String, Object>();
+        result.put("ret",ret);
+        result.put("msg", msg);
+        result.put("data", data);
+        return result;
     }
 }
