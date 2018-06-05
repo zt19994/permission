@@ -1,10 +1,15 @@
 package com.permission.controller;
 
 
+import com.permission.common.ApplicationContextHelper;
 import com.permission.common.JsonData;
+import com.permission.dao.SysAclMapper;
+import com.permission.dao.SysAclModuleMapper;
 import com.permission.exception.PermissionException;
+import com.permission.model.SysAclModule;
 import com.permission.param.TestVo;
 import com.permission.util.BeanValidator;
+import com.permission.util.JsonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -35,17 +40,10 @@ public class TestController {
     @ResponseBody
     public JsonData validate(TestVo testVo){
         logger.info("validate");
-        try{
-            Map<String,String> map = BeanValidator.validateObject(testVo);
-            if(map!=null && map.entrySet().size()>0){
-                for(Map.Entry<String, String> entry:map.entrySet()){
-                    logger.info("{}-->{}", entry.getKey(), entry.getValue());
-                }
-            }
-        }catch(Exception e){
-
-        }
-
+        SysAclModuleMapper moduleMapper = ApplicationContextHelper.popBean(SysAclModuleMapper.class);
+        SysAclModule sysAclModule = moduleMapper.selectByPrimaryKey(1);
+        logger.info(JsonMapper.obj2String(sysAclModule));
+        BeanValidator.check(testVo);
         return JsonData.success("test validate");
     }
 }
