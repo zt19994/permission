@@ -7,6 +7,9 @@ import lombok.ToString;
 
 import java.util.Date;
 
+/**
+ * 部门
+ */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

@@ -13,6 +13,7 @@ import java.util.Date;
 
 /**
  * @author zt1994 2018/6/13 21:01
+ * 部门service
  */
 @Service
 public class SysDeptService {
@@ -43,12 +44,13 @@ public class SysDeptService {
 
     /**
      * 获取上个层级
+     *
      * @param deptId
      * @return
      */
-    private String getLevel(Integer deptId){
+    private String getLevel(Integer deptId) {
         SysDept dept = sysDeptMapper.selectByPrimaryKey(deptId);
-        if(dept == null){
+        if (dept == null) {
             return null;
         }
         return dept.getLevel();
