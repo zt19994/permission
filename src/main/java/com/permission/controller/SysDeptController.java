@@ -44,10 +44,26 @@ public class SysDeptController {
         return JsonData.success();
     }
 
+    /**
+     * 部门树
+     * @return
+     */
     @RequestMapping("/tree.json")
     @ResponseBody
     public JsonData tree(){
         List<DeptLevelDto> dtoList = sysTreeService.deptTree();
         return JsonData.success(dtoList);
+    }
+
+    /**
+     * 更新部门树
+     * @param deptParam
+     * @return
+     */
+    @RequestMapping("/update.json")
+    @ResponseBody
+    public JsonData updateDept(DeptParam deptParam){
+        sysDeptService.update(deptParam);
+        return JsonData.success();
     }
 }

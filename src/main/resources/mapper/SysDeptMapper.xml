@@ -145,4 +145,30 @@
         <include refid="Base_Column_List"/>
         from sys_dept
     </select>
+
+    <!--通过level获取子部门列表-->
+    <select id="getChildDeptListByLevel" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_dept
+        WHERE LEVEL LIKE #{level} || '.%'
+    </select>
+
+    <update id="batchUpdateLevel" parameterType="map">
+        <foreach collection="sysDeptList" item="sysDept" separator=";">
+            UPDATE sys_dept
+            SET level = #{sysDept.level}
+            WHERE id = #{sysDept.id}
+        </foreach>
+    </update>
+
+    <select id="countByNameAndParentId" parameterType="map" resultType="int">
+        SELECT COUNT(1)
+        FROM sys_dept
+        WHERE parentId = #{parentId}
+        AND name = #{deptName}
+        <if test="id != null">
+            AND id != #{id}
+        </if>
+    </select>
 </mapper>
