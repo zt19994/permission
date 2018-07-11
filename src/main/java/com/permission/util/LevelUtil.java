@@ -20,7 +20,7 @@ public class LevelUtil {
      * @param parentId
      * @return
      */
-    public static String calculateLevel(String parentLevel, int parentId) {
+    public static String calculateLevel(String parentLevel, Integer parentId) {
         if (StringUtils.isBlank(parentLevel)) {
             return ROOT;
         } else {

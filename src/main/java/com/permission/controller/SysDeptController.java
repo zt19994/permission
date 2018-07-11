@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -29,40 +30,57 @@ public class SysDeptController {
     @Autowired
     private SysDeptService sysDeptService;
 
+    /**
+     * 计算树的结构
+     */
     @Autowired
     private SysTreeService sysTreeService;
 
+
+    /**
+     * 到部门页面
+     *
+     * @return
+     */
+    @RequestMapping("/dept.page")
+    public ModelAndView page() {
+        return new ModelAndView("dept");
+    }
+
     /**
      * 新增部门
+     *
      * @param deptParam
      * @return
      */
     @RequestMapping("/save.json")
     @ResponseBody
-    public JsonData saveDept(DeptParam deptParam){
+    public JsonData saveDept(DeptParam deptParam) {
         sysDeptService.save(deptParam);
         return JsonData.success();
     }
 
     /**
      * 部门树
+     *
      * @return
      */
     @RequestMapping("/tree.json")
     @ResponseBody
-    public JsonData tree(){
+    public JsonData tree() {
         List<DeptLevelDto> dtoList = sysTreeService.deptTree();
         return JsonData.success(dtoList);
     }
 
     /**
      * 更新部门树
+     *
      * @param deptParam
      * @return
      */
     @RequestMapping("/update.json")
     @ResponseBody
-    public JsonData updateDept(DeptParam deptParam){
+    public JsonData updateDept(DeptParam deptParam) {
         sysDeptService.update(deptParam);
         return JsonData.success();
     }
