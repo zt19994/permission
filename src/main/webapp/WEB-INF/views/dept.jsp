@@ -153,5 +153,73 @@
     </form>
 </div>
 
+<script id="deptListTemplate" type="x-tmpl-mustache">
+<ol class="dd-list">
+    {{#deptList}}
+        <li class="dd-item dd2-item dept-name" id="dept_{{id}}" href="javascript:void(0)" data-id="{{id}}">
+            <div class="dd2-content" style="cursor:pointer;">
+            {{name}}
+            <span style="float:right;">
+                <a class="green dept-edit" href="#" data-id="{{id}}" >
+                    <i class="ace-icon fa fa-pencil bigger-100"></i>
+                </a>
+                &nbsp;
+                <a class="red dept-delete" href="#" data-id="{{id}}" data-name="{{name}}">
+                    <i class="ace-icon fa fa-trash-o bigger-100"></i>
+                </a>
+            </span>
+            </div>
+        </li>
+    {{/deptList}}
+</ol>
+</script>
+
+<script type="application/javascript">
+    $(function () {
+        var deptList; // 缓存树形部门列表
+        var deptMap = {}; //缓存map格式的部门信息
+
+        var deptListTemplate = $("#deptListTemplate").html();
+        Mustache.parse(deptListTemplate);
+
+        loadDeptTree();
+        function loadDeptTree() {
+            $.ajax({
+                url: '/sys/dept/tree.json',
+                success: function (result) {
+                    if(result.ret){
+                        deptList = result.data;
+                        var rendered = Mustache.render(deptListTemplate, {deptList:result.data});
+                        $("#deptList").html(rendered);
+                        recursiveRenderDept(result.data);
+                        bindDeptClick();
+                    }else {
+                        showMessage("加载部门列表", result.msg, false);
+                    }
+                }
+            })
+        }
+
+        //递归渲染部门列表
+        function recursiveRenderDept(deptList){
+            if(deptList && deptList.length > 0){
+                $(deptList).each(function (i, dept) {
+                    deptMap[dept.id] = dept;
+                    if(dept.deptList.length>0){
+                        var rendered = Mustache.render(deptListTemplate, {deptList:dept.deptList});
+                        $("#dept_" + dept.id).append(rendered);
+                        recursiveRenderDept(dept.deptList)
+                    }
+                })
+            }
+        }
+
+        // 绑定部门点击事件
+        function bindDeptClick() {
+
+        }
+
+    })
+</script>
 </body>
 </html>
