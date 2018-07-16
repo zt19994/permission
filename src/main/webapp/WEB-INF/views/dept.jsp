@@ -48,7 +48,8 @@
                         <div class="col-xs-6">
                             <div class="dataTables_length" id="dynamic-table_length"><label>
                                 展示
-                                <select id="pageSize" name="dynamic-table_length" aria-controls="dynamic-table" class="form-control input-sm">
+                                <select id="pageSize" name="dynamic-table_length" aria-controls="dynamic-table"
+                                        class="form-control input-sm">
                                     <option value="10">10</option>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
@@ -57,7 +58,8 @@
                             </div>
                         </div>
                     </div>
-                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer" role="grid"
+                    <table id="dynamic-table" class="table table-striped table-bordered table-hover dataTable no-footer"
+                           role="grid"
                            aria-describedby="dynamic-table_info" style="font-size:14px">
                         <thead>
                         <tr role="row">
@@ -100,15 +102,18 @@
             </tr>
             <tr>
                 <td><label for="deptName">名称</label></td>
-                <td><input type="text" name="name" id="deptName" value="" class="text ui-widget-content ui-corner-all"></td>
+                <td><input type="text" name="name" id="deptName" value="" class="text ui-widget-content ui-corner-all">
+                </td>
             </tr>
             <tr>
                 <td><label for="deptSeq">顺序</label></td>
-                <td><input type="text" name="seq" id="deptSeq" value="1" class="text ui-widget-content ui-corner-all"></td>
+                <td><input type="text" name="seq" id="deptSeq" value="1" class="text ui-widget-content ui-corner-all">
+                </td>
             </tr>
             <tr>
                 <td><label for="deptRemark">备注</label></td>
-                <td><textarea name="remark" id="deptRemark" class="text ui-widget-content ui-corner-all" rows="3" cols="25"></textarea></td>
+                <td><textarea name="remark" id="deptRemark" class="text ui-widget-content ui-corner-all" rows="3"
+                              cols="25"></textarea></td>
             </tr>
         </table>
     </form>
@@ -125,15 +130,18 @@
             <tr>
                 <td><label for="userName">名称</label></td>
                 <input type="hidden" name="id" id="userId"/>
-                <td><input type="text" name="username" id="userName" value="" class="text ui-widget-content ui-corner-all"></td>
+                <td><input type="text" name="username" id="userName" value=""
+                           class="text ui-widget-content ui-corner-all"></td>
             </tr>
             <tr>
                 <td><label for="userMail">邮箱</label></td>
-                <td><input type="text" name="mail" id="userMail" value="" class="text ui-widget-content ui-corner-all"></td>
+                <td><input type="text" name="mail" id="userMail" value="" class="text ui-widget-content ui-corner-all">
+                </td>
             </tr>
             <tr>
                 <td><label for="userTelephone">电话</label></td>
-                <td><input type="text" name="telephone" id="userTelephone" value="" class="text ui-widget-content ui-corner-all"></td>
+                <td><input type="text" name="telephone" id="userTelephone" value=""
+                           class="text ui-widget-content ui-corner-all"></td>
             </tr>
             <tr>
                 <td><label for="userStatus">状态</label></td>
@@ -147,7 +155,8 @@
             </tr>
             <tr>
                 <td><label for="userRemark">备注</label></td>
-                <td><textarea name="remark" id="userRemark" class="text ui-widget-content ui-corner-all" rows="3" cols="25"></textarea></td>
+                <td><textarea name="remark" id="userRemark" class="text ui-widget-content ui-corner-all" rows="3"
+                              cols="25"></textarea></td>
             </tr>
         </table>
     </form>
@@ -172,28 +181,33 @@
         </li>
     {{/deptList}}
 </ol>
+
+
+
 </script>
 
 <script type="application/javascript">
     $(function () {
         var deptList; // 缓存树形部门列表
         var deptMap = {}; //缓存map格式的部门信息
+        var optionStr = "";
 
         var deptListTemplate = $("#deptListTemplate").html();
         Mustache.parse(deptListTemplate);
 
         loadDeptTree();
+
         function loadDeptTree() {
             $.ajax({
                 url: '/sys/dept/tree.json',
                 success: function (result) {
-                    if(result.ret){
+                    if (result.ret) {
                         deptList = result.data;
-                        var rendered = Mustache.render(deptListTemplate, {deptList:result.data});
+                        var rendered = Mustache.render(deptListTemplate, {deptList: result.data});
                         $("#deptList").html(rendered);
                         recursiveRenderDept(result.data);
                         bindDeptClick();
-                    }else {
+                    } else {
                         showMessage("加载部门列表", result.msg, false);
                     }
                 }
@@ -201,12 +215,12 @@
         }
 
         //递归渲染部门列表
-        function recursiveRenderDept(deptList){
-            if(deptList && deptList.length > 0){
+        function recursiveRenderDept(deptList) {
+            if (deptList && deptList.length > 0) {
                 $(deptList).each(function (i, dept) {
                     deptMap[dept.id] = dept;
-                    if(dept.deptList.length>0){
-                        var rendered = Mustache.render(deptListTemplate, {deptList:dept.deptList});
+                    if (dept.deptList.length > 0) {
+                        var rendered = Mustache.render(deptListTemplate, {deptList: dept.deptList});
                         $("#dept_" + dept.id).append(rendered);
                         recursiveRenderDept(dept.deptList)
                     }
@@ -217,6 +231,44 @@
         // 绑定部门点击事件
         function bindDeptClick() {
 
+        }
+
+
+        $(".dept-add").click(function () {
+            $("#dialog-dept-form").dialog({
+                model: true,
+                title: "新增部门",
+                open: function (event, ui) {
+                    $(".ui-dialog-titlebar-close", $(this).parent()).hide();
+                    optionStr = "<option value=\"0\">-</option>";
+                    recursiveRenderDeptSelect(deptList, 1);
+                    $("#deptForm")[0].reset();
+                    $("parentId").html(optionStr);
+                }
+            });
+        });
+
+        function recursiveRenderDeptSelect(deptList, level) {
+            level = level | 0;
+            if (deptList && deptList.length > 0) {
+                $(deptList).each(function (i, dept) {
+                    deptMap[dept.id] = dept;
+                    var blank = "";
+                    if (level > 1) {
+                        for (var j = 3; j <= level; j++) {
+                            blank += "..";
+                        }
+                        blank += "L";
+                    }
+                    optionStr += Mustache.render("<option value='{{id}}'>{{name}}</option>", {
+                        id: dept.id,
+                        name: blank + dept.name
+                    });
+                    if (dept.deptList && dept.deptList.length > 0) {
+                        recursiveRenderDeptSelect(dept.deptList, level + 1);
+                    }
+                })
+            }
         }
 
     })
