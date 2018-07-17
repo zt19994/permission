@@ -184,6 +184,7 @@
 
 
 
+
 </script>
 
 <script type="application/javascript">
@@ -191,6 +192,7 @@
         var deptList; // 缓存树形部门列表
         var deptMap = {}; //缓存map格式的部门信息
         var optionStr = "";
+        var lastClickDept = -1;
 
         var deptListTemplate = $("#deptListTemplate").html();
         Mustache.parse(deptListTemplate);
@@ -230,7 +232,47 @@
 
         // 绑定部门点击事件
         function bindDeptClick() {
+            $(".dept-edit").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var deptId = $(this).attr("data-id");
+                $("#dialog-dept-form").dialog({
+                    model: true,
+                    title: "编辑部门",
+                    open: function (event, ui) {
+                        $(".ui-dialog-titlebar-close", $(this).parent()).hide();
+                        optionStr = "<option value=\"0\">-</option>";
+                        recursiveRenderDeptSelect(deptList, 1);
+                        $("#deptForm")[0].reset();
+                        $("#parentId").html(optionStr);
+                        $("#deptId").val(deptId);
+                        var targetDept = deptMap[deptId];
+                        if(targetDept){
+                            $("#parentId").val(targetDept.parentId);
+                            $("#deptName").val(targetDept.name);
+                            $("#deptSeq").val(targetDept.seq);
+                            $("#deptRemark").val(targetDept.remark);
+                        }
+                    },
+                    buttons: {
+                        "更新": function (e) {
+                            e.preventDefault();
+                            updateDept(false, function (data) {
+                                $("#dialog-dept-form").dialog("close");
+                            },  function (data) {
+                                showMessage("更新部门", data.msg, false);
+                            })
+                        },
+                        "取消" : function () {
+                            $("#dialog-dept-form").dialog("close");
+                        }
+                    }
+                });
+            })
+        }
 
+        function handleDepSelected(deptId) {
+            lastClickDept = deptId;
         }
 
 
@@ -244,6 +286,19 @@
                     recursiveRenderDeptSelect(deptList, 1);
                     $("#deptForm")[0].reset();
                     $("parentId").html(optionStr);
+                },
+                buttons: {
+                    "添加": function (e) {
+                        e.preventDefault();
+                        updateDept(true, function (data) {
+                            $("#dialog-dept-form").dialog("close");
+                        },  function (data) {
+                            showMessage("新增部门", data.msg, false);
+                        })
+                    },
+                    "取消" : function () {
+                        $("#dialog-dept-form").dialog("close");
+                    }
                 }
             });
         });
@@ -269,6 +324,26 @@
                     }
                 })
             }
+        }
+
+        function updateDept(isCreate, successCallback, failCallback) {
+            $.ajax({
+                url: isCreate ? "/sys/dept/save.json" : "/sys/dept/update.json",
+                data: $("#deptForm").serializeArray(),
+                type: 'POST',
+                success: function (result) {
+                    if(result.ret){
+                        loadDeptTree();
+                        if(successCallback){
+                            successCallback(result);
+                        }
+                    }else {
+                        if(failCallback){
+                            failCallback(result);
+                        }
+                    }
+                }
+            })
         }
 
     })
