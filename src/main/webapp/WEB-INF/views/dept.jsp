@@ -185,6 +185,7 @@
 
 
 
+
 </script>
 
 <script type="application/javascript">
@@ -232,24 +233,25 @@
 
         // 绑定部门点击事件
         function bindDeptClick() {
+            //删除部门
             $(".dept-delete").click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 var deptId = $(this).attr("data-id");
                 var deptName = $(this).attr("data-name");
-                if(confirm("确认要删除部门【" + deptName + "】吗？")){
+                if (confirm("确认要删除部门【" + deptName + "】吗？")) {
                     //todo
                     console.log("delete dept:" + deptName);
                 }
             });
-
+            //点击部门高亮
             $(".dept-name").click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 var deptId = $(this).attr("data-id");
                 handleDepSelected(deptId);
             });
-
+            //编辑部门
             $(".dept-edit").click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -265,7 +267,7 @@
                         $("#parentId").html(optionStr);
                         $("#deptId").val(deptId);
                         var targetDept = deptMap[deptId];
-                        if(targetDept){
+                        if (targetDept) {
                             $("#parentId").val(targetDept.parentId);
                             $("#deptName").val(targetDept.name);
                             $("#deptSeq").val(targetDept.seq);
@@ -277,11 +279,11 @@
                             e.preventDefault();
                             updateDept(false, function (data) {
                                 $("#dialog-dept-form").dialog("close");
-                            },  function (data) {
+                            }, function (data) {
                                 showMessage("更新部门", data.msg, false);
                             })
                         },
-                        "取消" : function () {
+                        "取消": function () {
                             $("#dialog-dept-form").dialog("close");
                         }
                     }
@@ -289,8 +291,9 @@
             })
         }
 
+        //高亮或移除高亮
         function handleDepSelected(deptId) {
-            if(lastClickDeptId != -1){
+            if (lastClickDeptId != -1) {
                 var lastDept = $("#dept_" + lastClickDeptId + " .dd2-content:first");
                 lastDept.removeClass("btn-yellow");
                 lastDept.removeClass("no-hover");
@@ -307,6 +310,7 @@
             console.log("load userList, deptId:" + deptId);
         }
 
+        //新增部门
         $(".dept-add").click(function () {
             $("#dialog-dept-form").dialog({
                 model: true,
@@ -323,11 +327,11 @@
                         e.preventDefault();
                         updateDept(true, function (data) {
                             $("#dialog-dept-form").dialog("close");
-                        },  function (data) {
+                        }, function (data) {
                             showMessage("新增部门", data.msg, false);
                         })
                     },
-                    "取消" : function () {
+                    "取消": function () {
                         $("#dialog-dept-form").dialog("close");
                     }
                 }
@@ -357,19 +361,20 @@
             }
         }
 
+        //更新部门
         function updateDept(isCreate, successCallback, failCallback) {
             $.ajax({
                 url: isCreate ? "/sys/dept/save.json" : "/sys/dept/update.json",
                 data: $("#deptForm").serializeArray(),
                 type: 'POST',
                 success: function (result) {
-                    if(result.ret){
+                    if (result.ret) {
                         loadDeptTree();
-                        if(successCallback){
+                        if (successCallback) {
                             successCallback(result);
                         }
-                    }else {
-                        if(failCallback){
+                    } else {
+                        if (failCallback) {
                             failCallback(result);
                         }
                     }
