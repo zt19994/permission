@@ -192,7 +192,7 @@
         var deptList; // 缓存树形部门列表
         var deptMap = {}; //缓存map格式的部门信息
         var optionStr = "";
-        var lastClickDept = -1;
+        var lastClickDeptId = -1;
 
         var deptListTemplate = $("#deptListTemplate").html();
         Mustache.parse(deptListTemplate);
@@ -232,6 +232,24 @@
 
         // 绑定部门点击事件
         function bindDeptClick() {
+            $(".dept-delete").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var deptId = $(this).attr("data-id");
+                var deptName = $(this).attr("data-name");
+                if(confirm("确认要删除部门【" + deptName + "】吗？")){
+                    //todo
+                    console.log("delete dept:" + deptName);
+                }
+            });
+
+            $(".dept-name").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var deptId = $(this).attr("data-id");
+                handleDepSelected(deptId);
+            });
+
             $(".dept-edit").click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -272,9 +290,22 @@
         }
 
         function handleDepSelected(deptId) {
-            lastClickDept = deptId;
+            if(lastClickDeptId != -1){
+                var lastDept = $("#dept_" + lastClickDeptId + " .dd2-content:first");
+                lastDept.removeClass("btn-yellow");
+                lastDept.removeClass("no-hover");
+            }
+            var currentDept = $("#dept_" + deptId + " .dd2-content:first");
+            currentDept.addClass("btn-yellow");
+            currentDept.addClass("no-hover");
+            lastClickDeptId = deptId;
+            loadUserList(deptId);
         }
 
+        function loadUserList(deptId) {
+            //todo
+            console.log("load userList, deptId:" + deptId);
+        }
 
         $(".dept-add").click(function () {
             $("#dialog-dept-form").dialog({
