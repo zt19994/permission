@@ -2,6 +2,9 @@ package com.permission.model;
 
 import java.util.Date;
 
+/**
+ * 用户类
+ */
 public class SysUser {
     private Integer id;
 
