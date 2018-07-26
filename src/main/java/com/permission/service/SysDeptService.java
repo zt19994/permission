@@ -25,6 +25,10 @@ public class SysDeptService {
     @Resource
     private SysDeptMapper sysDeptMapper;
 
+    /**
+     * 保存部门
+     * @param param
+     */
     public void save(DeptParam param) {
         BeanValidator.check(param);
         if (checkExist(param.getParentId(), param.getName(), param.getId())) {

@@ -61,6 +61,11 @@ public class BeanValidator {
         }
     }
 
+    /**
+     * 校验参数
+     * @param param
+     * @throws ParamException
+     */
     public static void check(Object param) throws ParamException{
         Map<String, String> map =BeanValidator.validateObject(param);
         if(MapUtils.isNotEmpty(map)){
