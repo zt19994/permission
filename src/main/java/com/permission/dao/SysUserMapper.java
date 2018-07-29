@@ -1,6 +1,7 @@
 package com.permission.dao;
 
 import com.permission.model.SysUser;
+import org.apache.ibatis.annotations.Param;
 
 public interface SysUserMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +15,7 @@ public interface SysUserMapper {
     int updateByPrimaryKeySelective(SysUser record);
 
     int updateByPrimaryKey(SysUser record);
+
+    SysUser findByKeyword(@Param("keyword") String keyword);
+
 }

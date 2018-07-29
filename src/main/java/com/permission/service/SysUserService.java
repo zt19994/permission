@@ -93,4 +93,9 @@ public class SysUserService {
     public boolean CheckTelephoneExist(String phone, Integer userId) {
         return false;
     }
+
+
+    public SysUser findByKeyword(String keyword){
+        return null;
+    }
 }
