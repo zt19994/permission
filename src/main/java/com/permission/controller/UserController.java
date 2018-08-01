@@ -18,7 +18,6 @@ import java.io.IOException;
  * 前台用户controller
  */
 @Controller
-@RequestMapping("/user")
 public class UserController {
 
     /**
@@ -67,7 +66,7 @@ public class UserController {
         if (StringUtils.isNotBlank(ret)){
             request.setAttribute("ret", ret);
         }
-        String path = "signin,jsp";
+        String path = "signin.jsp";
         request.getRequestDispatcher(path).forward(request, response);
     }
 }

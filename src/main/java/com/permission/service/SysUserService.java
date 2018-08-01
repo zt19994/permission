@@ -28,7 +28,7 @@ public class SysUserService {
      *
      * @param param
      */
-    public void save(UserParam param) {
+    public void save(UserParam param){
         BeanValidator.check(param);
         if (CheckTelephoneExist(param.getTelephone(), param.getId())) {
             throw new ParamException("电话已被占用");
@@ -80,22 +80,28 @@ public class SysUserService {
      * @return
      */
     public boolean checkEmailExist(String mail, Integer userID) {
-        return false;
+        return sysUserMapper.countByMail(mail, userID) > 0 ;
     }
 
     /**
      * 校验电话是否存在
      *
-     * @param phone
+     * @param telephone
      * @param userId
      * @return
      */
-    public boolean CheckTelephoneExist(String phone, Integer userId) {
-        return false;
+    public boolean CheckTelephoneExist(String telephone, Integer userId) {
+        return sysUserMapper.countByTelephone(telephone, userId) > 0;
     }
 
 
+    /**
+     * 通过关键字查询用户信息
+     *
+     * @param keyword
+     * @return
+     */
     public SysUser findByKeyword(String keyword){
-        return null;
+        return sysUserMapper.findByKeyword(keyword);
     }
 }
