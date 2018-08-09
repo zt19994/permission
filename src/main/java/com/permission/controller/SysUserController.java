@@ -1,11 +1,15 @@
 package com.permission.controller;
 
+import com.permission.beans.PageQuery;
+import com.permission.beans.PageResult;
 import com.permission.common.JsonData;
+import com.permission.model.SysUser;
 import com.permission.param.UserParam;
 import com.permission.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -46,5 +50,20 @@ public class SysUserController {
     public JsonData updateUser(UserParam userParam) {
         sysUserService.update(userParam);
         return JsonData.success();
+    }
+
+
+    /**
+     * 根据部门id和page查询条件查询用户列表
+     *
+     * @param deptId
+     * @param pageQuery
+     * @return
+     */
+    @RequestMapping("/page.json")
+    @ResponseBody
+    public JsonData page(@RequestParam("deptId") int deptId, PageQuery pageQuery) {
+        PageResult<SysUser> result = sysUserService.getPageByDeptId(deptId, pageQuery);
+        return JsonData.success(result);
     }
 }

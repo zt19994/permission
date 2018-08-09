@@ -193,4 +193,21 @@
             AND id != #{id}
         </if>
     </select>
+
+    <!--通过部门id查询用户总数-->
+    <select id="countByDeptId" parameterType="int" resultType="int">
+        SELECT COUNT(1)
+        FROM sys_user
+        WHERE dept_id = #{deptId};
+    </select>
+
+    <!--通过部门id和page查询条件查询用户列表-->
+    <select id="getPageByDeptId" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_user
+        WHERE dept_id = #{deptId}
+        ORDER BY username ASC
+        LIMIT #{page.offset}, #{page.pageSize}
+    </select>
 </mapper>

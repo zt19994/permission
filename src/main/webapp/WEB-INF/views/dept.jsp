@@ -329,7 +329,7 @@
         /*加载用户列表*/
         function loadUserList(deptId) {
             var pageSize = $("#pageSize").val();
-            var url = "/sys/user/list/json?deptId=" + deptId;
+            var url = "/sys/user/page.json?deptId=" + deptId;
             var pageNo = $("#userPage .pageNo").val() || 1 ;
             $.ajax({
                 url: url,
@@ -346,42 +346,41 @@
 
         /*渲染用户列表*/
         function renderUserListAndPage(result, url) {
-            if(result.ret){
-                if(result.data.total > 0){
+            if (result.ret) {
+                if (result.data.total > 0){
                     var rendered = Mustache.render(userListTemplate, {
-                        userList:result.data.data,
-                        "showDeptName": function () {
+                        userList: result.data.data,
+                        "showDeptName": function() {
                             return deptMap[this.deptId].name;
                         },
-                        "showStatus": function () {
-                            return this.status == 1 ? '有效': (this.status == 0 ? '无效' : '删除');
-                            
+                        "showStatus": function() {
+                            return this.status == 1 ? '有效' : (this.status == 0 ? '无效' : '删除');
                         },
-                        "blod": function () {
-                            return function (text, render) {
+                        "bold": function() {
+                            return function(text, render) {
                                 var status = render(text);
-                                if (status == '有效'){
+                                if (status == '有效') {
                                     return "<span class='label label-sm label-success'>有效</span>";
-                                }else if(status == '无效'){
+                                } else if(status == '无效') {
                                     return "<span class='label label-sm label-warning'>无效</span>";
-                                }else {
-                                    return "<span class='label'>删除</span>";
+                                } else {
+
                                 }
                             }
                         }
                     });
                     $("#userList").html(rendered);
                     bindUserClick();
-                    $.each(result.data.data, function (i, user) {
+                    $.each(result.data.data, function(i, user) {
                         userMap[user.id] = user;
-                    });
+                    })
                 } else {
                     $("#userList").html('');
                 }
                 var pageSize = $("#pageSize").val();
                 var pageNo = $("#userPage .pageNo").val() || 1;
-                renderPage(url, result.data.total, pageNo, pageSize, result.data.total>0 ? result.data.data.length : 0, "userPage", renderUserListAndPage)
-            }else {
+                renderPage(url, result.data.total, pageNo, pageSize, result.data.total > 0 ? result.data.data.length : 0, "userPage", renderUserListAndPage);
+            } else {
                 showMessage("获取部门下用户列表", result.msg, false);
             }
         }
