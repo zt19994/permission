@@ -120,6 +120,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.permission.model.SysAcl" >
     update sys_acl
     <set >
