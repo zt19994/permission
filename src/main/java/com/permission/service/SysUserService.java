@@ -3,11 +3,13 @@ package com.permission.service;
 import com.google.common.base.Preconditions;
 import com.permission.beans.PageQuery;
 import com.permission.beans.PageResult;
+import com.permission.common.RequestHolder;
 import com.permission.dao.SysUserMapper;
 import com.permission.exception.ParamException;
 import com.permission.model.SysUser;
 import com.permission.param.UserParam;
 import com.permission.util.BeanValidator;
+import com.permission.util.IpUtil;
 import com.permission.util.MD5Util;
 import com.permission.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +48,8 @@ public class SysUserService {
         SysUser user = SysUser.builder().username(param.getUsername()).telephone(param.getTelephone()).mail(param.getMail())
                 .password(encryptedPassword).deptId(param.getDeptId()).status(param.getStatus()).remark(param.getRemark()).build();
 
-        user.setOperator("system"); //todo
-        user.setOperateIp("127.0.0.1");//todo
+        user.setOperator(RequestHolder.getCurrentUser().getUsername());
+        user.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         user.setOperateTime(new Date());
         //todo:发生email成功后
         sysUserMapper.insertSelective(user);
@@ -71,6 +73,9 @@ public class SysUserService {
         Preconditions.checkNotNull(before, "待更新用户不存在");
         SysUser after = SysUser.builder().id(param.getId()).username(param.getUsername()).telephone(param.getTelephone()).mail(param.getMail())
                 .deptId(param.getDeptId()).status(param.getStatus()).remark(param.getRemark()).build();
+        after.setOperator(RequestHolder.getCurrentUser().getUsername());
+        after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
+        after.setOperateTime(new Date());
         sysUserMapper.updateByPrimaryKeySelective(after);
 
     }
