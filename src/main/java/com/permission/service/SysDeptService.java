@@ -88,7 +88,7 @@ public class SysDeptService {
         sysDeptMapper.updateByPrimaryKey(after);
     }
 
-    //todo 校验同一级下部门是否重复
+    //校验同一级下部门是否重复
     private boolean checkExist(Integer parentId, String deptName, Integer deptId) {
         int i = sysDeptMapper.countByNameAndParentId(parentId, deptName, deptId);
         return i > 0;
