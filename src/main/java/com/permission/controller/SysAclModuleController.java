@@ -3,6 +3,7 @@ package com.permission.controller;
 import com.permission.common.JsonData;
 import com.permission.param.AclModuleParam;
 import com.permission.service.SysAclModuleService;
+import com.permission.service.SysTreeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class SysAclModuleController {
 
     @Autowired
     private SysAclModuleService sysAclModuleService;
+
+    @Autowired
+    private SysTreeService sysTreeService;
 
     /**
      * 到权限模块页面
@@ -70,7 +74,6 @@ public class SysAclModuleController {
     @RequestMapping("/tree.json")
     @ResponseBody
     public JsonData tree() {
-
-        return null;
+        return JsonData.success(sysTreeService.aclModuleTree());
     }
 }
