@@ -36,7 +36,7 @@ public class AclParam {
     @Max(value = 3, message = "权限点类型不合法")
     private Integer type;
 
-    @NotNull(message = "必须指定权限点的类型")
+    @NotNull(message = "必须指定权限点的状态")
     @Min(value = 0, message = "权限点状态不合法")
     @Max(value = 1, message = "权限点状态不合法")
     private Integer status;
