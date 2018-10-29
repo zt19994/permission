@@ -11,6 +11,7 @@ import com.permission.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 角色service
@@ -22,9 +23,9 @@ public class SysRoleService {
     @Autowired
     private SysRoleMapper sysRoleMapper;
 
-    public void save(RoleParam param){
+    public void save(RoleParam param) {
         BeanValidator.check(param);
-        if (checkExist(param.getName(), param.getId())){
+        if (checkExist(param.getName(), param.getId())) {
             throw new ParamException("角色名称已经存在");
         }
         SysRole role = SysRole.builder().name(param.getName()).status(param.getStatus()).type(param.getType())
@@ -35,9 +36,9 @@ public class SysRoleService {
         sysRoleMapper.insertSelective(role);
     }
 
-    public void update(RoleParam param){
+    public void update(RoleParam param) {
         BeanValidator.check(param);
-        if (checkExist(param.getName(), param.getId())){
+        if (checkExist(param.getName(), param.getId())) {
             throw new ParamException("角色名称已经存在");
         }
         SysRole before = sysRoleMapper.selectByPrimaryKey(param.getId());
@@ -51,9 +52,17 @@ public class SysRoleService {
         sysRoleMapper.updateByPrimaryKeySelective(after);
     }
 
+    /**
+     * 获取所有角色
+     */
+    public List<SysRole> getAll() {
+        return sysRoleMapper.getAll();
+    }
 
-    private boolean checkExist(String name, Integer id){
-
-        return false;
+    /**
+     * 校验角色是否存在
+     */
+    private boolean checkExist(String name, Integer id) {
+        return sysRoleMapper.countByName(name, id) > 0;
     }
 }
