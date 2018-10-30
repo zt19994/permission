@@ -9,6 +9,7 @@ import com.permission.param.RoleParam;
 import com.permission.util.BeanValidator;
 import com.permission.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
  *
  * @author zt1994 2018/10/25 20:38
  */
+@Service
 public class SysRoleService {
 
     @Autowired
