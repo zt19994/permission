@@ -37,6 +37,19 @@ public class SysTreeService {
     @Autowired
     private SysAclModuleMapper sysAclModuleMapper;
 
+    /**
+     * 角色树
+     *
+     * @param roleId
+     * @return
+     */
+    public List<AclModuleLevelDto> roleTree(int roleId) {
+        //1. 当前用户已分配的权限点
+
+        //2. 当前角色分配的权限点
+
+        return null;
+    }
 
     /**
      * 权限树

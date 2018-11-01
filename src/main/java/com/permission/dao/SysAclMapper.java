@@ -43,4 +43,13 @@ public interface SysAclMapper {
      * @return
      */
     int countByNameAndAclModuleId(@Param("aclModuleId") int aclModuleId, @Param("name") String name, @Param("id") Integer id);
+
+
+    /**
+     * 获取所有权限
+     * @return
+     */
+    List<SysAcl> getAll();
+
+    List<SysAcl> getByIdList(@Param("idList") List<Integer> idList);
 }
