@@ -3,6 +3,7 @@ package com.permission.controller;
 import com.permission.common.JsonData;
 import com.permission.param.RoleParam;
 import com.permission.service.SysRoleService;
+import com.permission.service.SysTreeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,9 @@ public class SysRoleController {
 
     @Autowired
     private SysRoleService sysRoleService;
+
+    @Autowired
+    private SysTreeService sysTreeService;
 
     /**
      * 进入角色页面
@@ -62,7 +66,6 @@ public class SysRoleController {
     @RequestMapping("/roleTree.json")
     @ResponseBody
     public JsonData roleTree(@RequestParam("roleId") int roleId) {
-
-        return null;
+        return JsonData.success(sysTreeService.roleTree(roleId));
     }
 }
