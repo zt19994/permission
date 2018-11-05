@@ -7,6 +7,7 @@ import com.permission.dao.SysAclModuleMapper;
 import com.permission.dao.SysDeptMapper;
 import com.permission.dto.AclModuleLevelDto;
 import com.permission.dto.DeptLevelDto;
+import com.permission.model.SysAcl;
 import com.permission.model.SysAclModule;
 import com.permission.model.SysDept;
 import com.permission.util.LevelUtil;
@@ -38,6 +39,12 @@ public class SysTreeService {
     private SysAclModuleMapper sysAclModuleMapper;
 
     /**
+     * 核心mapper
+     */
+    @Autowired
+    private SysCoreService sysCoreService;
+
+    /**
      * 角色树
      *
      * @param roleId
@@ -45,9 +52,9 @@ public class SysTreeService {
      */
     public List<AclModuleLevelDto> roleTree(int roleId) {
         //1. 当前用户已分配的权限点
-
+        List<SysAcl> userAclList = sysCoreService.getCurrentUserAclList();
         //2. 当前角色分配的权限点
-
+        List<SysAcl> roleAclList = sysCoreService.getRoleAclList(roleId);
         return null;
     }
 

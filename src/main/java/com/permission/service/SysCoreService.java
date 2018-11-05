@@ -30,38 +30,46 @@ public class SysCoreService {
 
     /**
      * 获取当前用户权限列表
+     *
      * @return
      */
-    public List<Integer> getCurrentUserAclList(){
+    public List<SysAcl> getCurrentUserAclList() {
         int userId = RequestHolder.getCurrentUser().getId();
+        return getUserAclList(userId);
     }
 
 
     /**
      * 获取角色已分配权限列表
+     *
      * @param roleId
      * @return
      */
-    public List<SysAcl> getRoleAclList(int roleId){
-
+    public List<SysAcl> getRoleAclList(int roleId) {
+        List<Integer> aclIdList = sysRoleAclMapper.getAclIdListByRoleIdList(Lists.<Integer>newArrayList(roleId));
+        if (CollectionUtils.isEmpty(aclIdList)){
+            return Lists.newArrayList();
+        }
+        return sysAclMapper.getByIdList(aclIdList);
     }
 
 
     /**
      * 获取一个用户的权限列表
+     *
      * @param userId
      * @return
      */
-    public List<SysAcl> getUserAclList(int userId){
-        if(isSuperAdmin()){
+    public List<SysAcl> getUserAclList(int userId) {
+        if (isSuperAdmin()) {
             sysAclMapper.getAll();
         }
         List<Integer> userRoleIdList = sysRoleUserMapper.getRoleIdListByUserId(userId);
-        if (CollectionUtils.isEmpty(userRoleIdList)){
+        if (CollectionUtils.isEmpty(userRoleIdList)) {
             return Lists.newArrayList();
         }
         List<Integer> userAclIdList = sysRoleAclMapper.getAclIdListByRoleIdList(userRoleIdList);
-        if (CollectionUtils.isEmpty(userAclIdList)){
+        if (CollectionUtils.isEmpty(userAclIdList)) {
             return Lists.newArrayList();
         }
         return sysAclMapper.getByIdList(userAclIdList);
@@ -70,9 +78,10 @@ public class SysCoreService {
 
     /**
      * 是否是超级管理员
+     *
      * @return
      */
-    public boolean isSuperAdmin(){
+    public boolean isSuperAdmin() {
         return true;
     }
 }
