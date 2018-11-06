@@ -20,6 +20,7 @@ public interface SysRoleUserMapper {
 
     /**
      * 根据用户id获取角色列表
+     *
      * @param userId
      * @return
      */

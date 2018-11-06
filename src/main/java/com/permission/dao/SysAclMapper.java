@@ -1,7 +1,6 @@
 package com.permission.dao;
 
 import com.permission.beans.PageQuery;
-import com.permission.beans.PageResult;
 import com.permission.model.SysAcl;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,6 +21,7 @@ public interface SysAclMapper {
 
     /**
      * 通过权限模块id获取总数
+     *
      * @param aclModuleId
      * @return
      */
@@ -29,6 +29,7 @@ public interface SysAclMapper {
 
     /**
      * 通过权限模块id获取分页page
+     *
      * @param aclModuleId
      * @param page
      * @return
@@ -37,6 +38,7 @@ public interface SysAclMapper {
 
     /**
      * 获取权限数
+     *
      * @param aclModuleId
      * @param name
      * @param id
@@ -47,9 +49,13 @@ public interface SysAclMapper {
 
     /**
      * 获取所有权限
+     *
      * @return
      */
     List<SysAcl> getAll();
 
+    /**
+     * 通过权限id列表获取权限列表
+     */
     List<SysAcl> getByIdList(@Param("idList") List<Integer> idList);
 }

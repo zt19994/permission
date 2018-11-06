@@ -186,7 +186,8 @@
 
     <!--通过权限模块id获取分页page-->
     <select id="getPageByAclModuleId" parameterType="map" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         FROM sys_acl
         WHERE acl_module_id = #{aclModuleId}
         ORDER BY seq ASC, name ASC
@@ -202,5 +203,23 @@
         <if test="id !=null">
             AND id != #{id}
         </if>
+    </select>
+
+    <!--获取所有权限-->
+    <select id="getAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_acl
+    </select>
+
+    <!--通过权限id列表获取权限列表-->
+    <select id="getByIdList" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_acl
+        WHERE id IN
+        <foreach collection="idList" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
     </select>
 </mapper>

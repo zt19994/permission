@@ -20,6 +20,7 @@ public interface SysRoleAclMapper {
 
     /**
      * 通过角色id列表获取权限列表
+     *
      * @param roleIdList
      * @return
      */

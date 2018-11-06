@@ -1,7 +1,6 @@
 package com.permission.dao;
 
 import com.permission.model.SysAclModule;
-import com.permission.model.SysDept;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -37,7 +36,8 @@ public interface SysAclModuleMapper {
     void batchUpdateLevel(@Param("sysAclModuleList") List<SysAclModule> sysAclModuleList);
 
     /**
-     * 获取所有权限
+     * 获取所有权限模块列表
+     *
      * @return
      */
     List<SysAclModule> getAllAclModule();
