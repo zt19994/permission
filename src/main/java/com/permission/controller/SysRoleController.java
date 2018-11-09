@@ -2,14 +2,18 @@ package com.permission.controller;
 
 import com.permission.common.JsonData;
 import com.permission.param.RoleParam;
+import com.permission.service.SysRoleAclService;
 import com.permission.service.SysRoleService;
 import com.permission.service.SysTreeService;
+import com.permission.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 /**
  * 角色控制层
@@ -26,11 +30,14 @@ public class SysRoleController {
     @Autowired
     private SysTreeService sysTreeService;
 
+    @Autowired
+    private SysRoleAclService sysRoleAclService;
+
     /**
      * 进入角色页面
      */
     @RequestMapping("/role.page")
-    public ModelAndView page(){
+    public ModelAndView page() {
         return new ModelAndView("role");
     }
 
@@ -65,6 +72,7 @@ public class SysRoleController {
 
     /**
      * 获取当前角色树
+     *
      * @param roleId
      * @return
      */
@@ -72,5 +80,21 @@ public class SysRoleController {
     @ResponseBody
     public JsonData roleTree(@RequestParam("roleId") int roleId) {
         return JsonData.success(sysTreeService.roleTree(roleId));
+    }
+
+    /**
+     * 更新角色权限
+     *
+     * @param roleId
+     * @param aclIds
+     * @return
+     */
+    @RequestMapping("/changeAcls.json")
+    @ResponseBody
+    public JsonData changeAcls(@RequestParam("roleId") int roleId,
+                               @RequestParam(value = "aclIds", required = false, defaultValue = "") String aclIds) {
+        List<Integer> aclIdList = StringUtil.splitToListInt(aclIds);
+        sysRoleAclService.changeRoleAcls(roleId, aclIdList);
+        return JsonData.success();
     }
 }
