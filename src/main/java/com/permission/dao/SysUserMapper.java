@@ -49,6 +49,7 @@ public interface SysUserMapper {
 
     /**
      * 通过部门id查询用户总数
+     *
      * @param deptId
      * @return
      */
@@ -57,10 +58,27 @@ public interface SysUserMapper {
 
     /**
      * 通过部门id和page查询条件查询用户列表
+     *
      * @param deptId
      * @param page
      * @return
      */
     List<SysUser> getPageByDeptId(@Param("deptId") int deptId, @Param("page") PageQuery page);
+
+    /**
+     * 根据id列表获取用户信息
+     *
+     * @param idList
+     * @return
+     */
+    List<SysUser> getByIdList(@Param("idList") List<Integer> idList);
+
+
+    /**
+     * 获取所有用户信息
+     *
+     * @return
+     */
+    List<SysUser> getAll();
 
 }

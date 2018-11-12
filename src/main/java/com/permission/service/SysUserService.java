@@ -33,7 +33,7 @@ public class SysUserService {
      *
      * @param param
      */
-    public void save(UserParam param){
+    public void save(UserParam param) {
         BeanValidator.check(param);
         if (CheckTelephoneExist(param.getTelephone(), param.getId())) {
             throw new ParamException("电话已被占用");
@@ -88,7 +88,7 @@ public class SysUserService {
      * @return
      */
     public boolean checkEmailExist(String mail, Integer userID) {
-        return sysUserMapper.countByMail(mail, userID) > 0 ;
+        return sysUserMapper.countByMail(mail, userID) > 0;
     }
 
     /**
@@ -109,17 +109,26 @@ public class SysUserService {
      * @param keyword
      * @return
      */
-    public SysUser findByKeyword(String keyword){
+    public SysUser findByKeyword(String keyword) {
         return sysUserMapper.findByKeyword(keyword);
     }
 
-    public PageResult<SysUser> getPageByDeptId(int deptId, PageQuery page){
+    public PageResult<SysUser> getPageByDeptId(int deptId, PageQuery page) {
         BeanValidator.check(page);
         int count = sysUserMapper.countByDeptId(deptId);
-        if (count > 0){
+        if (count > 0) {
             List<SysUser> userList = sysUserMapper.getPageByDeptId(deptId, page);
             return PageResult.<SysUser>builder().total(count).data(userList).build();
         }
         return PageResult.<SysUser>builder().build();
+    }
+
+    /**
+     * 获取所有用户信息
+     *
+     * @return
+     */
+    public List<SysUser> getAll() {
+        return sysUserMapper.getAll();
     }
 }

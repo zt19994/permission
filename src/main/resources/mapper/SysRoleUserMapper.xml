@@ -111,4 +111,11 @@
         FROM sys_role_user
         WHERE user_id = #{userId}
     </select>
+
+    <!--根据角色id获取用户id列表-->
+    <select id="getUserIdListByRoleId" parameterType="map" resultType="int">
+        SELECT role_id
+        FROM sys_role_user
+        WHERE role_id = #{roleId}
+    </select>
 </mapper>

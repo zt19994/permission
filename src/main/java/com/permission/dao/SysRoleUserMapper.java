@@ -25,4 +25,12 @@ public interface SysRoleUserMapper {
      * @return
      */
     List<Integer> getRoleIdListByUserId(@Param("userId") int userId);
+
+    /**
+     * 根据角色id获取用户id列表
+     *
+     * @param roleId
+     * @return
+     */
+    List<Integer> getUserIdListByRoleId(@Param("roleId") int roleId);
 }

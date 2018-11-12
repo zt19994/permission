@@ -210,4 +210,22 @@
         ORDER BY username ASC
         LIMIT #{page.offset}, #{page.pageSize}
     </select>
+
+    <!--根据id列表获取用户信息-->
+    <select id="getByIdList" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_user
+        WHERE id IN
+        <foreach collection="idList" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <!--获取所有用户信息-->
+    <select id="getAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_user
+    </select>
 </mapper>

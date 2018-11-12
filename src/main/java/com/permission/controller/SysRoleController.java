@@ -1,10 +1,11 @@
 package com.permission.controller;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.permission.common.JsonData;
+import com.permission.model.SysUser;
 import com.permission.param.RoleParam;
-import com.permission.service.SysRoleAclService;
-import com.permission.service.SysRoleService;
-import com.permission.service.SysTreeService;
+import com.permission.service.*;
 import com.permission.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 角色控制层
@@ -32,6 +36,12 @@ public class SysRoleController {
 
     @Autowired
     private SysRoleAclService sysRoleAclService;
+
+    @Autowired
+    private SysRoleUserService sysRoleUserService;
+
+    @Autowired
+    private SysUserService sysUserService;
 
     /**
      * 进入角色页面
@@ -95,6 +105,25 @@ public class SysRoleController {
                                @RequestParam(value = "aclIds", required = false, defaultValue = "") String aclIds) {
         List<Integer> aclIdList = StringUtil.splitToListInt(aclIds);
         sysRoleAclService.changeRoleAcls(roleId, aclIdList);
+        return JsonData.success();
+    }
+
+    @RequestMapping("/users.json")
+    @ResponseBody
+    public JsonData users(@RequestParam("roleId") int roleId) {
+        List<SysUser> selectedUserList = sysRoleUserService.getListByRoleId(roleId);
+        List<SysUser> allUserList = sysUserService.getAll();
+        List<SysUser> unselectedUserList = Lists.newArrayList();
+        Set<Integer> selectedUserIdSet = selectedUserList.stream().map(sysUser -> sysUser.getId()).collect(Collectors.toSet());
+        for (SysUser sysUser : allUserList) {
+            if (sysUser.getStatus() == 1 && !selectedUserIdSet.contains(sysUser.getId())) {
+                unselectedUserList.add(sysUser);
+            }
+        }
+        //selectedUserList = selectedUserList.stream().filter(sysUser -> sysUser.getStatus() != 1).collect(Collectors.toList());
+        Map<String, List<SysUser>> map = Maps.newHashMap();
+        map.put("selected", selectedUserList);
+        map.put("unselected", unselectedUserList);
         return JsonData.success();
     }
 }
