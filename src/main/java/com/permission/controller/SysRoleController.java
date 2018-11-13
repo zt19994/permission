@@ -108,6 +108,20 @@ public class SysRoleController {
         return JsonData.success();
     }
 
+    @RequestMapping("/changeUsers.json")
+    @ResponseBody
+    public JsonData changeUsers(@RequestParam("roleId") int roleId,
+                                @RequestParam(value = "userIds", required = false, defaultValue = "") String userIds) {
+        List<Integer> userIdList = StringUtil.splitToListInt(userIds);
+        sysRoleUserService.changeRoleUsers(roleId, userIdList);
+        return JsonData.success();
+    }
+
+    /**
+     * 获取用户关系
+     * @param roleId
+     * @return
+     */
     @RequestMapping("/users.json")
     @ResponseBody
     public JsonData users(@RequestParam("roleId") int roleId) {
@@ -124,6 +138,6 @@ public class SysRoleController {
         Map<String, List<SysUser>> map = Maps.newHashMap();
         map.put("selected", selectedUserList);
         map.put("unselected", unselectedUserList);
-        return JsonData.success();
+        return JsonData.success(map);
     }
 }

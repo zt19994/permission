@@ -23,6 +23,7 @@
     delete from sys_role_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
     <insert id="insert" parameterType="com.permission.model.SysRoleUser">
     insert into sys_role_user (id, role_id, user_id, 
       operator, operate_time, operate_ip
@@ -74,6 +75,7 @@
             </if>
         </trim>
     </insert>
+
     <update id="updateByPrimaryKeySelective" parameterType="com.permission.model.SysRoleUser">
         update sys_role_user
         <set>
@@ -114,8 +116,23 @@
 
     <!--根据角色id获取用户id列表-->
     <select id="getUserIdListByRoleId" parameterType="map" resultType="int">
-        SELECT role_id
+        SELECT user_id
         FROM sys_role_user
         WHERE role_id = #{roleId}
     </select>
+
+    <!--根据角色id删除用户-->
+    <delete id="deleteByRoleId" parameterType="int">
+        DELETE FROM sys_role_user
+        WHERE role_id = #{roleId}
+    </delete>
+
+    <!--批量新增角色用户-->
+    <insert id="batchInsert" parameterType="map">
+        insert into sys_role_user (role_id, user_id, operator, operate_time, operate_ip)
+        values
+        <foreach collection="roleUserList" item="roleUser" separator=",">
+            (#{roleUser.roleId}, #{roleUser.userId}, #{roleUser.operator}, #{roleUser.operateTime}, #{roleUser.operateIp})
+        </foreach>
+    </insert>
 </mapper>
