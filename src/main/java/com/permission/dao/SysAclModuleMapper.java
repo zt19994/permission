@@ -41,4 +41,12 @@ public interface SysAclModuleMapper {
      * @return
      */
     List<SysAclModule> getAllAclModule();
+
+    /**
+     * 查看是否有子权限模块
+     *
+     * @param aclModuleId
+     * @return
+     */
+    int countByParentId(@Param("aclModuleId") int aclModuleId);
 }

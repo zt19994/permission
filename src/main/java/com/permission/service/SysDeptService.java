@@ -3,6 +3,8 @@ package com.permission.service;
 import com.google.common.base.Preconditions;
 import com.permission.common.RequestHolder;
 import com.permission.dao.SysDeptMapper;
+import com.permission.dao.SysUserMapper;
+import com.permission.exception.ParamException;
 import com.permission.exception.PermissionException;
 import com.permission.model.SysDept;
 import com.permission.param.DeptParam;
@@ -10,10 +12,10 @@ import com.permission.util.BeanValidator;
 import com.permission.util.IpUtil;
 import com.permission.util.LevelUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -24,11 +26,16 @@ import java.util.List;
 @Service
 public class SysDeptService {
 
-    @Resource
+    @Autowired
     private SysDeptMapper sysDeptMapper;
+
+    @Autowired
+    private SysUserMapper sysUserMapper;
+
 
     /**
      * 保存部门
+     *
      * @param param
      */
     public void save(DeptParam param) {
@@ -106,5 +113,22 @@ public class SysDeptService {
             return null;
         }
         return dept.getLevel();
+    }
+
+    /**
+     * 删除部门
+     *
+     * @param deptId
+     */
+    public void delete(int deptId) {
+        SysDept sysDept = sysDeptMapper.selectByPrimaryKey(deptId);
+        Preconditions.checkNotNull(sysDept, "待删除的部门不存在，无法删除");
+        if (sysDeptMapper.countByParentId(sysDept.getId()) > 0) {
+            throw new ParamException("当前部门下有子部门，无法删除");
+        }
+        if (sysUserMapper.countByDeptId(sysDept.getId()) > 0) {
+            throw new ParamException("当前部门下有用户，无法删除");
+        }
+        sysDeptMapper.deleteByPrimaryKey(sysDept.getId());
     }
 }

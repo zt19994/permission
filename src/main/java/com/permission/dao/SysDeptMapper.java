@@ -47,9 +47,17 @@ public interface SysDeptMapper {
      * 通过部门名称和父类id查询总数
      *
      * @param parentId 父类id
-     * @param name 部门名称
+     * @param name     部门名称
      * @param id
      * @return
      */
     int countByNameAndParentId(@Param("parentId") int parentId, @Param("name") String name, @Param("id") Integer id);
+
+    /**
+     * 查看是否有子部门
+     *
+     * @param deptId
+     * @return
+     */
+    int countByParentId(@Param("deptId") int deptId);
 }
