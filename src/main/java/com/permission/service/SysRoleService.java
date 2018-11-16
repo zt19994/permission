@@ -1,13 +1,16 @@
 package com.permission.service;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.permission.common.RequestHolder;
 import com.permission.dao.SysRoleMapper;
+import com.permission.dao.SysRoleUserMapper;
 import com.permission.exception.ParamException;
 import com.permission.model.SysRole;
 import com.permission.param.RoleParam;
 import com.permission.util.BeanValidator;
 import com.permission.util.IpUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,9 @@ public class SysRoleService {
 
     @Autowired
     private SysRoleMapper sysRoleMapper;
+
+    @Autowired
+    private SysRoleUserMapper sysRoleUserMapper;
 
     public void save(RoleParam param) {
         BeanValidator.check(param);
@@ -66,5 +72,19 @@ public class SysRoleService {
      */
     private boolean checkExist(String name, Integer id) {
         return sysRoleMapper.countByName(name, id) > 0;
+    }
+
+    /**
+     * 根据用户id获取分配的角色
+     *
+     * @param userId
+     * @return
+     */
+    public List<SysRole> getRoleListByUserId(int userId) {
+        List<Integer> roleIdList = sysRoleUserMapper.getRoleIdListByUserId(userId);
+        if (CollectionUtils.isEmpty(roleIdList)) {
+            return Lists.newArrayList();
+        }
+        return sysRoleMapper.getByIdList(roleIdList);
     }
 }

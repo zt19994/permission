@@ -10,6 +10,8 @@ import org.springframework.beans.BeanUtils;
 import java.util.List;
 
 /**
+ * 权限模块适配
+ *
  * @author zt1994 2018/9/11 20:46
  */
 @Getter

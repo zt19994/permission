@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * 权限mapper
+ */
 public interface SysAclMapper {
     int deleteByPrimaryKey(Integer id);
 

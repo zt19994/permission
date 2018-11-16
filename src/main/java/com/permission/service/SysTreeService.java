@@ -37,7 +37,7 @@ public class SysTreeService {
     private SysDeptMapper sysDeptMapper;
 
     /**
-     * 权限mapper
+     * 权限模块mapper
      */
     @Autowired
     private SysAclModuleMapper sysAclModuleMapper;
@@ -48,8 +48,31 @@ public class SysTreeService {
     @Autowired
     private SysCoreService sysCoreService;
 
+    /**
+     * 权限mapper
+     */
     @Autowired
     private SysAclMapper sysAclMapper;
+
+
+    /**
+     * 获取用户分配的权限
+     *
+     * @param userId
+     * @return
+     */
+    public List<AclModuleLevelDto> userAclTree(int userId) {
+        //获取指定用户的权限列表
+        List<SysAcl> userAclList = sysCoreService.getRoleAclList(userId);
+        List<AclDto> aclDtoList = Lists.newArrayList();
+        for (SysAcl sysAcl : userAclList) {
+            AclDto dto = AclDto.adapt(sysAcl);
+            dto.setHasAcl(true);
+            dto.setChecked(true);
+            aclDtoList.add(dto);
+        }
+        return aclListToTree(aclDtoList);
+    }
 
     /**
      * 角色树

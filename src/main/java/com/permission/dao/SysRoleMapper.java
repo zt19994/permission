@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * 角色mapper
+ */
 public interface SysRoleMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -27,4 +30,12 @@ public interface SysRoleMapper {
      * 查询角色数量
      */
     int countByName(@Param("name") String name, @Param("id") Integer id);
+
+    /**
+     * 根据id列表获取角色
+     *
+     * @param idList
+     * @return
+     */
+    List<SysRole> getByIdList(@Param("idList") List<Integer> idList);
 }
