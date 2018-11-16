@@ -132,4 +132,11 @@
             (#{roleAcl.roleId}, #{roleAcl.aclId}, #{roleAcl.operator}, #{roleAcl.operateTime}, #{roleAcl.operateIp})
         </foreach>
     </insert>
+
+    <!--通过aclId获取角色列表-->
+    <select id="getRoleIdListByAclId" resultType="int" parameterType="int">
+        SELECT role_id
+        FROM sys_role_acl
+        WHERE acl_id = #{aclId}
+    </select>
 </mapper>

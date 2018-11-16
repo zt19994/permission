@@ -47,4 +47,12 @@ public interface SysRoleUserMapper {
      * @param roleUserList
      */
     void batchInsert(@Param("roleUserList") List<SysRoleUser> roleUserList);
+
+    /**
+     * 根据角色id列表获取用户
+     *
+     * @param roleIdList
+     * @return
+     */
+    List<Integer> getUserIdListByRoleIdList(@Param("roleIdList") List<Integer> roleIdList);
 }
