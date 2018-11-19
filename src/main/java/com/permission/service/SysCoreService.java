@@ -6,11 +6,15 @@ import com.permission.dao.SysAclMapper;
 import com.permission.dao.SysRoleAclMapper;
 import com.permission.dao.SysRoleUserMapper;
 import com.permission.model.SysAcl;
+import com.permission.model.SysUser;
+import edu.princeton.cs.algs4.In;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author zt1994 2018/11/1 20:31
@@ -82,6 +86,41 @@ public class SysCoreService {
      * @return
      */
     public boolean isSuperAdmin() {
+        //todo
         return true;
+    }
+
+
+    /**
+     * 是否有url权限
+     * @param url
+     * @return
+     */
+    public boolean hasUrlAcl(String url) {
+        if (isSuperAdmin()) {
+            return true;
+        }
+        List<SysAcl> aclList = sysAclMapper.getByUrl(url);
+        if (CollectionUtils.isEmpty(aclList)) {
+            return true;
+        }
+        List<SysAcl> userAclList = getCurrentUserAclList();
+        Set<Integer> userAclIdSet  = userAclList.stream().map(sysAcl -> sysAcl.getId()).collect(Collectors.toSet());
+        boolean hasValidAcl = false;
+        //规则：只要有一个权限点有权限，那么就认为有权限访问
+        for (SysAcl acl : aclList) {
+            //判断一个用户是否具有某个权限点的访问权限
+            if (acl == null || acl.getStatus() != 1) { //权限点无效
+                continue;
+            }
+            hasValidAcl = true;
+            if (userAclIdSet.contains(acl.getId())) {
+                return true;
+            }
+        }
+        if (!hasValidAcl){
+            return true;
+        }
+        return false;
     }
 }
