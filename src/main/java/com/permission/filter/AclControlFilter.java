@@ -64,7 +64,7 @@ public class AclControlFilter implements Filter {
         }
         SysCoreService sysCoreService = ApplicationContextHelper.popBean(SysCoreService.class);
 
-        if (sysCoreService.hasUrlAcl(servletPath)) {
+        if (!sysCoreService.hasUrlAcl(servletPath)) {
             logger.info("{} visit {}, but no login, parameter:{}", JsonMapper.obj2String(sysUser), servletPath, JsonMapper.obj2String(requestMap));
             noAuth(request, response);
             return;
@@ -84,7 +84,7 @@ public class AclControlFilter implements Filter {
      */
     private void noAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String servletPath = request.getServletPath();
-        if (servletPath.endsWith(",json")) {
+        if (servletPath.endsWith(".json")) {
             JsonData jsonData = JsonData.fail("没有访问权限，如需要访问，请联系管理员");
             response.setHeader("Context-Type", "application/json");
             response.getWriter().print(JsonMapper.obj2String(jsonData));

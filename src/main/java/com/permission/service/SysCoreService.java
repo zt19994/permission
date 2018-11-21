@@ -86,7 +86,12 @@ public class SysCoreService {
      * @return
      */
     public boolean isSuperAdmin() {
-        //todo
+        //自己定义的假的超级管理员权限，实际中需要根据项目更改
+        //可以从配置文件中获取，也可以指定某个用户，也可以指定某个角色
+        SysUser sysUser = RequestHolder.getCurrentUser();
+        if (sysUser.getMail().contains("admin")) {
+            return true;
+        }
         return true;
     }
 
