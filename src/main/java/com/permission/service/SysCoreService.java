@@ -7,7 +7,6 @@ import com.permission.dao.SysRoleAclMapper;
 import com.permission.dao.SysRoleUserMapper;
 import com.permission.model.SysAcl;
 import com.permission.model.SysUser;
-import edu.princeton.cs.algs4.In;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * 核心service
+ *
  * @author zt1994 2018/11/1 20:31
  */
 @Service
@@ -51,7 +52,7 @@ public class SysCoreService {
      */
     public List<SysAcl> getRoleAclList(int roleId) {
         List<Integer> aclIdList = sysRoleAclMapper.getAclIdListByRoleIdList(Lists.<Integer>newArrayList(roleId));
-        if (CollectionUtils.isEmpty(aclIdList)){
+        if (CollectionUtils.isEmpty(aclIdList)) {
             return Lists.newArrayList();
         }
         return sysAclMapper.getByIdList(aclIdList);
@@ -98,6 +99,7 @@ public class SysCoreService {
 
     /**
      * 是否有url权限
+     *
      * @param url
      * @return
      */
@@ -110,7 +112,7 @@ public class SysCoreService {
             return true;
         }
         List<SysAcl> userAclList = getCurrentUserAclList();
-        Set<Integer> userAclIdSet  = userAclList.stream().map(sysAcl -> sysAcl.getId()).collect(Collectors.toSet());
+        Set<Integer> userAclIdSet = userAclList.stream().map(sysAcl -> sysAcl.getId()).collect(Collectors.toSet());
         boolean hasValidAcl = false;
         //规则：只要有一个权限点有权限，那么就认为有权限访问
         for (SysAcl acl : aclList) {
@@ -123,7 +125,7 @@ public class SysCoreService {
                 return true;
             }
         }
-        if (!hasValidAcl){
+        if (!hasValidAcl) {
             return true;
         }
         return false;
