@@ -12,6 +12,8 @@ import redis.clients.jedis.ShardedJedis;
 
 
 /**
+ * 系统缓存service
+ *
  * @author zt1994 2018/11/22 21:03
  */
 @Service
@@ -37,6 +39,21 @@ public class SysCacheService {
             shardedJedis.setex(cacheKey, timeoutSeconds, toSavedValue);
         } catch (Exception e) {
             LOGGER.error("save cache exception, prefix:{}, keys:{}", prefix.name(), JsonMapper.obj2String(keys));
+        } finally {
+            redisPool.safeClose(shardedJedis);
+        }
+    }
+
+    public String getFromCache(CacheKeyConstants prefix, String ... keys) {
+        ShardedJedis shardedJedis = null;
+        String cacheKey = generateCacheKey(prefix, keys);
+        try {
+            shardedJedis = redisPool.instance();
+            String value = shardedJedis.get(cacheKey);
+            return value;
+        } catch (Exception e) {
+            LOGGER.error("get cache exception, prefix:{}, keys:{}, e:{}", prefix.name(), JsonMapper.obj2String(keys), e);
+            return null;
         } finally {
             redisPool.safeClose(shardedJedis);
         }
