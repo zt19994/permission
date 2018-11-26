@@ -2,7 +2,6 @@ package com.permission.service;
 
 import com.google.common.base.Joiner;
 import com.permission.beans.CacheKeyConstants;
-import com.permission.common.RedisPool;
 import com.permission.util.JsonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
