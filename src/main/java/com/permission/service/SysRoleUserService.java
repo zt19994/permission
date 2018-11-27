@@ -31,6 +31,9 @@ public class SysRoleUserService {
     @Autowired
     private SysUserMapper sysUserMapper;
 
+    @Autowired
+    private SysLogService sysLogService;
+
     /**
      * 通过角色Id获取用户id列表
      *
@@ -58,6 +61,7 @@ public class SysRoleUserService {
             }
         }
         updateRoleUsers(roleId, userIdList);
+        sysLogService.saveRoleUserLog(roleId, originUserIdList, userIdList);
     }
 
     @Transactional

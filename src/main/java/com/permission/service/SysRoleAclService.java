@@ -26,6 +26,9 @@ public class SysRoleAclService {
     @Autowired
     private SysRoleAclMapper sysRoleAclMapper;
 
+    @Autowired
+    private SysLogService sysLogService;
+
     public void changeRoleAcls(Integer roleId, List<Integer> aclIdList) {
         //获取以前的角色权限
         List<Integer> originAclIdList = sysRoleAclMapper.getAclIdListByRoleIdList(Lists.newArrayList(roleId));
@@ -39,6 +42,7 @@ public class SysRoleAclService {
             }
         }
         updateRoleAcls(roleId, aclIdList);
+        sysLogService.saveRoleAclLog(roleId, originAclIdList, aclIdList);
     }
 
 

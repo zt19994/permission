@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 权限Service
+ * 权限点Service
  *
  * @author zt1994 2018/10/8 20:47
  */
@@ -27,6 +27,9 @@ public class SysAclService {
 
     @Autowired
     private SysAclMapper sysAclMapper;
+
+    @Autowired
+    private SysLogService sysLogService;
 
     /**
      * 保存权限点
@@ -45,6 +48,7 @@ public class SysAclService {
         acl.setOperateTime(new Date());
         acl.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         sysAclMapper.insertSelective(acl);
+        sysLogService.saveAclLog(null, acl);
     }
 
     /**
@@ -67,6 +71,7 @@ public class SysAclService {
         after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
 
         sysAclMapper.updateByPrimaryKeySelective(after);
+        sysLogService.saveAclLog(before, after);
     }
 
     public boolean checkExist(int aclModuleId, String name, Integer id) {

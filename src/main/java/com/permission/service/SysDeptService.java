@@ -32,6 +32,9 @@ public class SysDeptService {
     @Autowired
     private SysUserMapper sysUserMapper;
 
+    @Autowired
+    private SysLogService sysLogService;
+
 
     /**
      * 保存部门
@@ -51,6 +54,7 @@ public class SysDeptService {
         dept.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         dept.setOperateTime(new Date());
         sysDeptMapper.insertSelective(dept);
+        sysLogService.saveDeptLog(null, dept);
 
     }
 
@@ -71,6 +75,7 @@ public class SysDeptService {
         after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         after.setOperateTime(new Date());
         updateWithChild(before, after);
+        sysLogService.saveDeptLog(before, after);
     }
 
 

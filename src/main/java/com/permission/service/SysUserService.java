@@ -28,6 +28,10 @@ public class SysUserService {
     @Autowired
     private SysUserMapper sysUserMapper;
 
+    @Autowired
+    private SysLogService sysLogService;
+
+
     /**
      * 保存用户
      *
@@ -53,6 +57,7 @@ public class SysUserService {
         user.setOperateTime(new Date());
         //todo:发生email成功后
         sysUserMapper.insertSelective(user);
+        sysLogService.saveUserLog(null, user);
     }
 
 
@@ -77,7 +82,7 @@ public class SysUserService {
         after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         after.setOperateTime(new Date());
         sysUserMapper.updateByPrimaryKeySelective(after);
-
+        sysLogService.saveUserLog(before, after);
     }
 
     /**
