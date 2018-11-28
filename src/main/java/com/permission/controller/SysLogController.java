@@ -1,19 +1,17 @@
 package com.permission.controller;
 
-import com.permission.beans.LogType;
-import com.permission.common.RequestHolder;
-import com.permission.model.*;
+import com.permission.beans.PageQuery;
+import com.permission.beans.PageResult;
+import com.permission.common.JsonData;
+import com.permission.param.SearchLogParam;
 import com.permission.service.SysLogService;
-import com.permission.util.IpUtil;
-import com.permission.util.JsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.Date;
-import java.util.List;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
+ * 权限log
  * @author zt1994 2018/11/27 20:05
  */
 @Controller
@@ -22,6 +20,12 @@ public class SysLogController {
 
     @Autowired
     private SysLogService sysLogService;
+
+    @RequestMapping("/page.json")
+    @ResponseBody
+    public JsonData page(SearchLogParam param, PageQuery page) {
+        return JsonData.success();
+    }
 
 
 }
