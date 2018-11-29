@@ -12,6 +12,7 @@ import com.permission.param.SearchLogParam;
 import com.permission.util.BeanValidator;
 import com.permission.util.IpUtil;
 import com.permission.util.JsonMapper;
+import com.sun.tools.internal.ws.processor.model.Request;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,13 @@ public class SysLogService {
     @Autowired
     private SysLogMapper sysLogMapper;
 
-    public PageResult<SysLog> searchPageList(SearchLogParam param, PageQuery page) {
+    /**
+     * 搜索日志pageList
+     * @param param
+     * @param page
+     * @return
+     */
+    public PageResult<SysLogWithBLOBs> searchPageList(SearchLogParam param, PageQuery page) {
         BeanValidator.check(page);
         SearchLogDto dto = new SearchLogDto();
         dto.setType(param.getType());
@@ -53,10 +60,12 @@ public class SysLogService {
         } catch (Exception e) {
             throw new ParamException("传入的日期格式有问题，正确格式为：yyyy-MM-dd HH:mm:ss");
         }
-        if (sysLogMapper.countBySearchDto(dto) > 0) {
-            List<SysLog>
+        int count = sysLogMapper.countBySearchDto(dto);
+        if (count > 0) {
+            List<SysLogWithBLOBs> logList = sysLogMapper.getPageListBySearchDto(dto, page);
+            return PageResult.<SysLogWithBLOBs>builder().total(count).data(logList).build();
         }
-        return null;
+        return PageResult.<SysLogWithBLOBs>builder().build() ;
 
     }
 

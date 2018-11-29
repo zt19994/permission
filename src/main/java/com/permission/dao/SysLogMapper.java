@@ -23,7 +23,20 @@ public interface SysLogMapper {
 
     int updateByPrimaryKey(SysLog record);
 
-    int countBySearchDto(SearchLogDto dto);
+    /**
+     * 查询日志数
+     *
+     * @param dto
+     * @return
+     */
+    int countBySearchDto(@Param("dto") SearchLogDto dto);
 
-    List<SysLog> getPageListBySearchDto(@Param("dto") SearchLogDto dto, @Param("page") PageQuery page);
+    /**
+     * 通过搜索条件获取页面列表
+     *
+     * @param dto
+     * @param page
+     * @return
+     */
+    List<SysLogWithBLOBs> getPageListBySearchDto(@Param("dto") SearchLogDto dto, @Param("page") PageQuery page);
 }
