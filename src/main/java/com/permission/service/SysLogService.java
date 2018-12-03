@@ -1,10 +1,11 @@
 package com.permission.service;
 
+import com.google.common.base.Preconditions;
 import com.permission.beans.LogType;
 import com.permission.beans.PageQuery;
 import com.permission.beans.PageResult;
 import com.permission.common.RequestHolder;
-import com.permission.dao.SysLogMapper;
+import com.permission.dao.*;
 import com.permission.dto.SearchLogDto;
 import com.permission.exception.ParamException;
 import com.permission.model.*;
@@ -12,8 +13,8 @@ import com.permission.param.SearchLogParam;
 import com.permission.util.BeanValidator;
 import com.permission.util.IpUtil;
 import com.permission.util.JsonMapper;
-import com.sun.tools.internal.ws.processor.model.Request;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,93 @@ public class SysLogService {
     @Autowired
     private SysLogMapper sysLogMapper;
 
+    @Autowired
+    private SysDeptMapper sysDeptMapper;
+
+    @Autowired
+    private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private SysAclMapper sysAclMapper;
+
+    @Autowired
+    private SysAclModuleMapper sysAclModuleMapper;
+
+    @Autowired
+    private SysRoleMapper sysRoleMapper;
+
+    public void recover(int id) {
+        SysLogWithBLOBs sysLogWithBLOBs = sysLogMapper.selectByPrimaryKey(id);
+        Preconditions.checkNotNull(sysLogWithBLOBs, "待还原的记录不存在");
+        switch (sysLogWithBLOBs.getType()) {
+            case LogType.TYPE_DEPT:
+                SysDept beforeDept = sysDeptMapper.selectByPrimaryKey(sysLogWithBLOBs.getTargetId());
+                Preconditions.checkNotNull(beforeDept, "待还原的部门已经不存在了");
+                if (StringUtils.isBlank(sysLogWithBLOBs.getNewValue()) || StringUtils.isBlank(sysLogWithBLOBs.getOldValue())) {
+                    throw new ParamException("新增和删除操作不做还原");
+                }
+                SysDept afterDept = JsonMapper.string2Obj(sysLogWithBLOBs.getOldValue(), new TypeReference<SysDept>() {
+                });
+                sysDeptMapper.updateByPrimaryKeySelective(afterDept);
+                saveDeptLog(beforeDept, afterDept);
+                break;
+            case LogType.TYPE_USER:
+                SysUser beforeUser = sysUserMapper.selectByPrimaryKey(sysLogWithBLOBs.getTargetId());
+                Preconditions.checkNotNull(beforeUser, "待还原的用户已经不存在了");
+                if (StringUtils.isBlank(sysLogWithBLOBs.getNewValue()) || StringUtils.isBlank(sysLogWithBLOBs.getOldValue())) {
+                    throw new ParamException("新增和删除操作不做还原");
+                }
+                SysUser afterUser = JsonMapper.string2Obj(sysLogWithBLOBs.getOldValue(), new TypeReference<SysUser>() {
+                });
+                sysUserMapper.updateByPrimaryKeySelective(afterUser);
+                saveUserLog(beforeUser, afterUser);
+                break;
+            case LogType.TYPE_ACL_MODULE:
+                SysAclModule beforeAclModule = sysAclModuleMapper.selectByPrimaryKey(sysLogWithBLOBs.getTargetId());
+                Preconditions.checkNotNull(beforeAclModule, "待还原的权限模块已经不存在了");
+                if (StringUtils.isBlank(sysLogWithBLOBs.getNewValue()) || StringUtils.isBlank(sysLogWithBLOBs.getOldValue())) {
+                    throw new ParamException("新增和删除操作不做还原");
+                }
+                SysAclModule afterAclModule = JsonMapper.string2Obj(sysLogWithBLOBs.getOldValue(), new TypeReference<SysAclModule>() {
+                });
+                sysAclModuleMapper.updateByPrimaryKeySelective(afterAclModule);
+                saveAclModuleLog(beforeAclModule, afterAclModule);
+                break;
+            case LogType.TYPE_ACL:
+                SysAcl beforeAcl = sysAclMapper.selectByPrimaryKey(sysLogWithBLOBs.getTargetId());
+                Preconditions.checkNotNull(beforeAcl, "待还原的权限已经不存在了");
+                if (StringUtils.isBlank(sysLogWithBLOBs.getNewValue()) || StringUtils.isBlank(sysLogWithBLOBs.getOldValue())) {
+                    throw new ParamException("新增和删除操作不做还原");
+                }
+                SysAcl afterAcl = JsonMapper.string2Obj(sysLogWithBLOBs.getOldValue(), new TypeReference<SysAcl>() {
+                });
+                sysAclMapper.updateByPrimaryKeySelective(afterAcl);
+                saveAclLog(beforeAcl, afterAcl);
+                break;
+            case LogType.TYPE_ROLE:
+                SysRole beforeRole = sysRoleMapper.selectByPrimaryKey(sysLogWithBLOBs.getTargetId());
+                Preconditions.checkNotNull(beforeRole, "待还原的角色已经不存在了");
+                if (StringUtils.isBlank(sysLogWithBLOBs.getNewValue()) || StringUtils.isBlank(sysLogWithBLOBs.getOldValue())) {
+                    throw new ParamException("新增和删除操作不做还原");
+                }
+                SysRole afterRole = JsonMapper.string2Obj(sysLogWithBLOBs.getOldValue(), new TypeReference<SysRole>() {
+                });
+                sysRoleMapper.updateByPrimaryKeySelective(afterRole);
+                saveRoleLog(beforeRole, afterRole);
+                break;
+            case LogType.TYPE_ROLE_ACL:
+                break;
+            case LogType.TYPE_ROLE_USER:
+                break;
+            default:
+                ;
+        }
+    }
+
+
     /**
      * 搜索日志pageList
+     *
      * @param param
      * @param page
      * @return
@@ -65,7 +151,7 @@ public class SysLogService {
             List<SysLogWithBLOBs> logList = sysLogMapper.getPageListBySearchDto(dto, page);
             return PageResult.<SysLogWithBLOBs>builder().total(count).data(logList).build();
         }
-        return PageResult.<SysLogWithBLOBs>builder().build() ;
+        return PageResult.<SysLogWithBLOBs>builder().build();
 
     }
 
