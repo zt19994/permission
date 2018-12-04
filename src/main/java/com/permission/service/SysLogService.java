@@ -46,6 +46,12 @@ public class SysLogService {
     @Autowired
     private SysRoleMapper sysRoleMapper;
 
+    @Autowired
+    private SysRoleAclService sysRoleAclService;
+
+    @Autowired
+    private SysRoleUserService sysRoleUserService;
+
     public void recover(int id) {
         SysLogWithBLOBs sysLogWithBLOBs = sysLogMapper.selectByPrimaryKey(id);
         Preconditions.checkNotNull(sysLogWithBLOBs, "待还原的记录不存在");
@@ -58,6 +64,9 @@ public class SysLogService {
                 }
                 SysDept afterDept = JsonMapper.string2Obj(sysLogWithBLOBs.getOldValue(), new TypeReference<SysDept>() {
                 });
+                afterDept.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
+                afterDept.setOperator(RequestHolder.getCurrentUser().getUsername());
+                afterDept.setOperateTime(new Date());
                 sysDeptMapper.updateByPrimaryKeySelective(afterDept);
                 saveDeptLog(beforeDept, afterDept);
                 break;
@@ -69,6 +78,9 @@ public class SysLogService {
                 }
                 SysUser afterUser = JsonMapper.string2Obj(sysLogWithBLOBs.getOldValue(), new TypeReference<SysUser>() {
                 });
+                afterUser.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
+                afterUser.setOperator(RequestHolder.getCurrentUser().getUsername());
+                afterUser.setOperateTime(new Date());
                 sysUserMapper.updateByPrimaryKeySelective(afterUser);
                 saveUserLog(beforeUser, afterUser);
                 break;
@@ -80,6 +92,9 @@ public class SysLogService {
                 }
                 SysAclModule afterAclModule = JsonMapper.string2Obj(sysLogWithBLOBs.getOldValue(), new TypeReference<SysAclModule>() {
                 });
+                afterAclModule.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
+                afterAclModule.setOperator(RequestHolder.getCurrentUser().getUsername());
+                afterAclModule.setOperateTime(new Date());
                 sysAclModuleMapper.updateByPrimaryKeySelective(afterAclModule);
                 saveAclModuleLog(beforeAclModule, afterAclModule);
                 break;
@@ -91,6 +106,9 @@ public class SysLogService {
                 }
                 SysAcl afterAcl = JsonMapper.string2Obj(sysLogWithBLOBs.getOldValue(), new TypeReference<SysAcl>() {
                 });
+                afterAcl.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
+                afterAcl.setOperator(RequestHolder.getCurrentUser().getUsername());
+                afterAcl.setOperateTime(new Date());
                 sysAclMapper.updateByPrimaryKeySelective(afterAcl);
                 saveAclLog(beforeAcl, afterAcl);
                 break;
@@ -102,12 +120,23 @@ public class SysLogService {
                 }
                 SysRole afterRole = JsonMapper.string2Obj(sysLogWithBLOBs.getOldValue(), new TypeReference<SysRole>() {
                 });
+                afterRole.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
+                afterRole.setOperator(RequestHolder.getCurrentUser().getUsername());
+                afterRole.setOperateTime(new Date());
                 sysRoleMapper.updateByPrimaryKeySelective(afterRole);
                 saveRoleLog(beforeRole, afterRole);
                 break;
             case LogType.TYPE_ROLE_ACL:
+                SysRole aclRole = sysRoleMapper.selectByPrimaryKey(sysLogWithBLOBs.getTargetId());
+                Preconditions.checkNotNull(aclRole, "角色已经不存在了");
+                sysRoleAclService.changeRoleAcls(sysLogWithBLOBs.getTargetId(), JsonMapper.string2Obj(sysLogWithBLOBs.getOldValue(), new TypeReference<List<Integer>>() {
+                }));
                 break;
             case LogType.TYPE_ROLE_USER:
+                SysRole userRole = sysRoleMapper.selectByPrimaryKey(sysLogWithBLOBs.getTargetId());
+                Preconditions.checkNotNull(userRole, "角色已经不存在了");
+                sysRoleUserService.changeRoleUsers(sysLogWithBLOBs.getTargetId(), JsonMapper.string2Obj(sysLogWithBLOBs.getOldValue(), new TypeReference<List<Integer>>() {
+                }));
                 break;
             default:
                 ;
@@ -213,32 +242,6 @@ public class SysLogService {
         SysLogWithBLOBs sysLog = new SysLogWithBLOBs();
         sysLog.setType(LogType.TYPE_ROLE);
         sysLog.setTargetId(after == null ? before.getId() : after.getId());
-        sysLog.setOldValue(before == null ? "" : JsonMapper.obj2String(before));
-        sysLog.setNewValue(after == null ? "" : JsonMapper.obj2String(after));
-        sysLog.setOperator(RequestHolder.getCurrentUser().getUsername());
-        sysLog.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
-        sysLog.setOperateTime(new Date());
-        sysLog.setStatus(1);
-        sysLogMapper.insertSelective(sysLog);
-    }
-
-    public void saveRoleAclLog(int roleId, List<Integer> before, List<Integer> after) {
-        SysLogWithBLOBs sysLog = new SysLogWithBLOBs();
-        sysLog.setType(LogType.TYPE_ROLE_ACL);
-        sysLog.setTargetId(roleId);
-        sysLog.setOldValue(before == null ? "" : JsonMapper.obj2String(before));
-        sysLog.setNewValue(after == null ? "" : JsonMapper.obj2String(after));
-        sysLog.setOperator(RequestHolder.getCurrentUser().getUsername());
-        sysLog.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
-        sysLog.setOperateTime(new Date());
-        sysLog.setStatus(1);
-        sysLogMapper.insertSelective(sysLog);
-    }
-
-    public void saveRoleUserLog(int roleId, List<Integer> before, List<Integer> after) {
-        SysLogWithBLOBs sysLog = new SysLogWithBLOBs();
-        sysLog.setType(LogType.TYPE_ROLE_USER);
-        sysLog.setTargetId(roleId);
         sysLog.setOldValue(before == null ? "" : JsonMapper.obj2String(before));
         sysLog.setNewValue(after == null ? "" : JsonMapper.obj2String(after));
         sysLog.setOperator(RequestHolder.getCurrentUser().getUsername());

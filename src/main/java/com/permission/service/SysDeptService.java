@@ -68,7 +68,7 @@ public class SysDeptService {
         if (checkExist(param.getParentId(), param.getName(), param.getId())) {
             throw new PermissionException("同一层级下存在相同部门");
         }
-        SysDept after = SysDept.builder().name(param.getName()).parentId(param.getParentId())
+        SysDept after = SysDept.builder().id(param.getId()).name(param.getName()).parentId(param.getParentId())
                 .seq(param.getSeq()).remark(param.getRemark()).build();
         after.setLevel(LevelUtil.calculateLevel(getLevel(param.getParentId()), param.getParentId()));
         after.setOperator(RequestHolder.getCurrentUser().getUsername());
