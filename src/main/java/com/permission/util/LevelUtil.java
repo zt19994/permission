@@ -3,6 +3,8 @@ package com.permission.util;
 import org.apache.commons.lang3.StringUtils;
 
 /**
+ * 层级关系工具类
+ *
  * @author zt1994 2018/6/25 20:01
  */
 public class LevelUtil {

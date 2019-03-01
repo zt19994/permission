@@ -24,8 +24,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author zt1994 2018/6/27 20:06
  * 计算树的结构
+ *
+ * @author zt1994 2018/6/27 20:06
  */
 @Service
 public class SysTreeService {
