@@ -52,6 +52,13 @@ public class SysRoleUserService {
         return sysUserMapper.getByIdList(userIdList);
     }
 
+
+    /**
+     * 修改角色的用户列表
+     *
+     * @param roleId
+     * @param userIdList
+     */
     public void changeRoleUsers(int roleId, List<Integer> userIdList) {
         //获取以前的角色权限
         List<Integer> originUserIdList = sysRoleUserMapper.getUserIdListByRoleId(roleId);

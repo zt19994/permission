@@ -81,7 +81,7 @@ public class SysRoleController {
     }
 
     /**
-     * 获取当前角色树
+     * 获取当前角色 权限树
      *
      * @param roleId
      * @return
@@ -108,6 +108,14 @@ public class SysRoleController {
         return JsonData.success();
     }
 
+
+    /**
+     * 修改角色用户关系
+     *
+     * @param roleId
+     * @param userIds
+     * @return
+     */
     @RequestMapping("/changeUsers.json")
     @ResponseBody
     public JsonData changeUsers(@RequestParam("roleId") int roleId,
@@ -119,6 +127,7 @@ public class SysRoleController {
 
     /**
      * 获取用户关系
+     *
      * @param roleId
      * @return
      */
@@ -128,7 +137,7 @@ public class SysRoleController {
         List<SysUser> selectedUserList = sysRoleUserService.getListByRoleId(roleId);
         List<SysUser> allUserList = sysUserService.getAll();
         List<SysUser> unselectedUserList = Lists.newArrayList();
-        Set<Integer> selectedUserIdSet = selectedUserList.stream().map(sysUser -> sysUser.getId()).collect(Collectors.toSet());
+        Set<Integer> selectedUserIdSet = selectedUserList.stream().map(SysUser::getId).collect(Collectors.toSet());
         for (SysUser sysUser : allUserList) {
             if (sysUser.getStatus() == 1 && !selectedUserIdSet.contains(sysUser.getId())) {
                 unselectedUserList.add(sysUser);

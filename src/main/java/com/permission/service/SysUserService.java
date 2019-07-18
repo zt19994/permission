@@ -118,6 +118,14 @@ public class SysUserService {
         return sysUserMapper.findByKeyword(keyword);
     }
 
+
+    /**
+     * 根据部门id和page查询条件查询用户列表
+     *
+     * @param deptId
+     * @param page
+     * @return
+     */
     public PageResult<SysUser> getPageByDeptId(int deptId, PageQuery page) {
         BeanValidator.check(page);
         int count = sysUserMapper.countByDeptId(deptId);

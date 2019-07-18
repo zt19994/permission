@@ -85,17 +85,17 @@ public class SysAclModuleService {
         String newLevelPrefix = after.getLevel();
         String oldLevelPrefix = before.getLevel();
         if (!after.getLevel().equals(before.getLevel())) {
-            List<SysAclModule> aclModuleListList = sysAclModuleMapper.getChildAclModuleListByLevel(before.getLevel());
-            if (CollectionUtils.isNotEmpty(aclModuleListList)) {
-                for (SysAclModule sysAclModule : aclModuleListList) {
+            List<SysAclModule> aclModuleList = sysAclModuleMapper.getChildAclModuleListByLevel(before.getLevel());
+            if (CollectionUtils.isNotEmpty(aclModuleList)) {
+                for (SysAclModule sysAclModule : aclModuleList) {
                     String level = sysAclModule.getLevel();
                     if (level.indexOf(oldLevelPrefix) == 0) {
                         level = newLevelPrefix + level.substring(oldLevelPrefix.length());
                         sysAclModule.setLevel(level);
                     }
                 }
-                //批量更新部门列表
-                sysAclModuleMapper.batchUpdateLevel(aclModuleListList);
+                //批量更新权限模块
+                sysAclModuleMapper.batchUpdateLevel(aclModuleList);
             }
         }
 

@@ -13,6 +13,6 @@ public class StringUtil {
     //1,2,3,4
     public static List<Integer> splitToListInt(String str) {
         List<String> strList = Splitter.on(",").trimResults().omitEmptyStrings().splitToList(str);
-        return strList.stream().map(strItem -> Integer.parseInt(strItem)).collect(Collectors.toList());
+        return strList.stream().map(Integer::parseInt).collect(Collectors.toList());
     }
 }

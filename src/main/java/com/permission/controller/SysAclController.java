@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 权限
+ * 权限点 controller
  *
  * @author zt1994 2018/8/14 20:33
  */

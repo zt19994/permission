@@ -163,7 +163,7 @@
         </if>
     </select>
 
-    <!--通过level获取子部门列表-->
+    <!--通过level获取子权限模块-->
     <select id="getChildAclModuleListByLevel" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
@@ -171,12 +171,12 @@
         WHERE level like #{level} || '.%'
     </select>
 
-    <!--批量更新部门列表-->
+    <!--批量更新权限模块列表-->
     <update id="batchUpdateLevel" parameterType="map">
         <foreach collection="sysAclModuleList" item="SysAclModule" separator=";">
             UPDATE sys_acl_module
-            SET level = #{sysDept.level}
-            WHERE id = #{sysDept.id}
+            SET level = #{SysAclModule.level}
+            WHERE id = #{SysAclModule.id}
         </foreach>
     </update>
 

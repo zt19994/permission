@@ -29,7 +29,7 @@ public interface SysAclModuleMapper {
     List<SysAclModule> getChildAclModuleListByLevel(@Param("level") String level);
 
     /**
-     * 批量更新部门列表
+     * 批量更新权限模块层级
      *
      * @param sysAclModuleList
      */

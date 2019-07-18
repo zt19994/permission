@@ -37,7 +37,6 @@ public class LoginFilter implements Filter {
         RequestHolder.add(user);
         RequestHolder.add(request);
         filterChain.doFilter(servletRequest, servletResponse);
-        return;
     }
 
     @Override
